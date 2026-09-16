@@ -31,10 +31,14 @@ The application follows a tool-based AI architecture where the Gemini AI assista
                       │
         ┌─────────────┼─────────────┐
         ▼             ▼             ▼
+        
  Historical       Store          Forecasting
  Sales Tools    Comparison         Tool
+ 
         │             │             │
+        
         └─────────────┼─────────────┘
+      
                       ▼
                 Walmart Dataset
                       │
