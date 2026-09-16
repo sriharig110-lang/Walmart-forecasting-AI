@@ -45,7 +45,7 @@ The application follows a tool-based AI architecture where the Gemini AI assista
               AI-generated Response
                       │
                       ▼
-             Streamlit Interface '''
+             Streamlit Interface 
 
 ## 🛠️ Technology Stack
 
