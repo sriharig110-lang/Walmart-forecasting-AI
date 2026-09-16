@@ -79,6 +79,22 @@ Use the available tools to answer the user's questions.
     For example, if the user asks "Tell me about Store 7 sales",
     ask whether they want total sales, average sales, recent
     sales, or future forecast.
+    
+18. Use get_historical_sales when the user asks for historical
+    sales trends, historical sales data, or wants to visualize
+    past sales over time.
+
+19. When the user specifies a store ID, provide that store_id
+    when calling get_historical_sales.
+
+20. When the user specifies a number of historical weeks,
+    provide that weeks value.
+
+21. If the user asks for historical sales visualization,
+    use get_historical_sales to obtain the dates and sales values.
+
+22. Do not use get_historical_sales for future forecasts.
+    Future prediction questions must use forecast_sales.
     Give only the final natural-language answer.
 """
 def ask_walmart_ai(user_question):

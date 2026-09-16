@@ -1,6 +1,7 @@
 import streamlit as st
 import pandas as pd
 from LLM.gemini_agent import ask_walmart_ai
+from Visualization.visualizations import render_visualization
 
 st.set_page_config(
     page_title="Walmart AI ",
@@ -58,133 +59,7 @@ if user_question := st.chat_input("Ask about sales, forecast, or store performan
 
 # Visualizations
 if show_visuals and st.session_state.tool_results:
-
-    tool_results = st.session_state.tool_results
-
-    # Forecast visualization
-    for tool_result in tool_results:
-        if "forecast" in tool_result:
-            st.subheader("📈 Sales Forecast")
-            st.line_chart(tool_result["forecast"])
-
-    # Average sales comparison
-    average_results = [
-        result
-        for result in tool_results
-        if "average_sales" in result
-    ]
-
-    if len(average_results) >= 2:
-
-        comparison_data = pd.DataFrame({
-            "Store": [
-                f"Store {result['store_id']}"
-                for result in average_results
-            ],
-            "Average Sales": [
-                result["average_sales"]
-                for result in average_results
-            ]
-        })
-
-        st.subheader("📊 Average Sales Comparison")
-
-        st.bar_chart(
-            comparison_data.set_index("Store")
-        )
-
-    # Total sales comparison
-    total_results = [
-        result
-        for result in tool_results
-        if "total_sales" in result and "Store_id" in result
-    ]
-
-    if len(total_results) >= 2:
-
-        total_comparison = pd.DataFrame({
-            "Store": [
-                f"Store {result['Store_id']}"
-                for result in total_results
-            ],
-            "Total Sales": [
-                result["total_sales"]
-                for result in total_results
-            ]
-        })
-
-        st.subheader("📊 Total Sales Comparison")
-
-        st.bar_chart(
-            total_comparison.set_index("Store")
-        )
-    
-
-    
-    
-    
-    
-    
-
-    
-    
-    
+    for tool_result in st.session_state.tool_results:
+        if "error" not in tool_result:
+            render_visualization(tool_result)
  
-    
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
- 
-    
- 
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
- 
-    
- 
-    
-    
-    
-    
-    
-
-    
-    
-    
-    
-    
-    
-
-    
-
-    
-    
-    
-    

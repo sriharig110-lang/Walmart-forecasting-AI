@@ -72,6 +72,43 @@ def get_total_sales(store_id=None,weeks=None):
           "weeks":weeks,
           "total_sales": total_sales}
 
+def get_historical_sales(store_id=None, weeks=None):
+    if store_id is not None:
+        store_data = df[df["Store"] == store_id].copy()
+
+        if store_data.empty:
+            return {"error": f"Store {store_id} was not found."}
+
+        store_data = store_data.sort_values("Date")
+
+        if weeks is not None:
+            if weeks <= 0:
+                return {"error": "Weeks must be greater than 0."}
+            store_data = store_data.tail(weeks)
+
+        return {
+            "store_id": store_id,
+            "dates": store_data["Date"].dt.strftime("%Y-%m-%d").tolist(),
+            "sales": store_data["Weekly_Sales"].tolist()
+        }
+
+    sales_data = (
+        df.groupby("Date")["Weekly_Sales"]
+        .sum()
+        .sort_index()
+    )
+
+    if weeks is not None:
+        if weeks <= 0:
+            return {"error": "Weeks must be greater than 0."}
+        sales_data = sales_data.tail(weeks)
+
+    return {
+        "store_id": None,
+        "dates": sales_data.index.strftime("%Y-%m-%d").tolist(),
+        "sales": sales_data.tolist()
+    }
+
 tools = [{
     "type": "function",
     "Name": "get_average_sales",
@@ -168,6 +205,27 @@ tools = [{
         "required": ["forecast", "operation"]
     }
 },
+        {
+    "Name": "get_historical_sales",
+    "description": (
+        "Get historical weekly sales values and dates for a specific "
+        "Walmart store or for overall Walmart sales."
+    ),
+    "parameters": {
+        "type": "object",
+        "properties": {
+            "store_id": {
+                "type": ["integer", "null"],
+                "description": "Walmart store ID. Use null for overall Walmart sales."
+            },
+            "weeks": {
+                "type": ["integer", "null"],
+                "description": "Number of recent historical weeks. Use null for all available historical data."
+            }
+        },
+        "required": ["store_id", "weeks"]
+    }
+},
         {"type":"function",
          "Name":"get_total_sales",
          "description":""" Calculate the total historical walmart sales accross all stores.and
@@ -185,7 +243,8 @@ tool_registry = {
     "forecast_sales": forecast_sales,
     "compare_stores": compare_stores,
     "get_average_forecast": get_average_forecast,
-    "get_total_sales":get_total_sales
+    "get_total_sales":get_total_sales,
+    "get_historical_sales":get_historical_sales
 }
 
 
