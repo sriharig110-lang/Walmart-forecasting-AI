@@ -52,7 +52,7 @@ def test_agent_orchestrates_multi_tool_forecast(monkeypatch):
     result = gemini_agent.ask_walmart_ai("What is the average predicted sales for Store 7 over 3 weeks?")
 
     assert result["answer"] == "The average predicted weekly sales are $120."
-    assert result["error"] if "error" in result else None is None
+    assert "error" not in result
     assert [name for name, _ in executed] == ["forecast_sales", "get_average_forecast"]
     assert len(client.calls) == 3
 
